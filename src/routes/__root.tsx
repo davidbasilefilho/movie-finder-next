@@ -6,9 +6,9 @@ import {
   Scripts,
   createRootRouteWithContext,
 } from "@tanstack/react-router";
-import type { QueryClient } from "@tanstack/react-query";
 
 import appCss from "@/styles/app.css?url";
+import { QueryClient } from "@tanstack/react-query";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
