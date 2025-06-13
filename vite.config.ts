@@ -1,6 +1,11 @@
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import tsConfigPaths from "vite-tsconfig-paths";
-import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+
+const ReactCompilerConfig = {
+  target: "19",
+};
 
 export default defineConfig({
   server: {
@@ -9,5 +14,10 @@ export default defineConfig({
   plugins: [
     tsConfigPaths({ projects: ["./tsconfig.json"] }),
     tanstackStart({ target: "vercel" }),
+    // react({
+    //   babel: {
+    //     plugins: [["babel-plugin-react-compiler", ReactCompilerConfig]],
+    //   },
+    // }),
   ],
 });

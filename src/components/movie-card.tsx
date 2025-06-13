@@ -1,26 +1,22 @@
-import { FindPopularMoviesResponse } from "@/lib/schema/res";
+import { Movie } from "@/lib/schema/res";
+import { getLanguageName } from "@/lib/utils";
 import { StarFilledIcon } from "@radix-ui/react-icons";
-import { motion, AnimatePresence } from "motion/react";
 import { Link } from "@tanstack/react-router";
 import { formatDate, parse as parseDate } from "date-fns";
+import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
-import { getLanguageName } from "@/lib/utils";
 
-export default function MovieCard({
-  movie,
-}: {
-  movie: NonNullable<FindPopularMoviesResponse["results"]>[number];
-}) {
+export default function MovieCard({ movie }: { movie: Movie }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div
-      className="rounded-3xl bg-card text-card-foreground shadow flex flex-col h-full"
-      key={movie.id}
+      className="rounded-3xl bg-card border text-card-foreground shadow flex flex-col h-full"
+      key={movie!.id}
     >
       <Link
-        to="/movie/$movieId"
-        params={{ movieId: movie.id! }}
+        to="/movie/$id"
+        params={{ id: movie!.id!.toFixed(0) }}
         className="relative block aspect-[2/3] mb-4 overflow-hidden rounded-t-3xl"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -31,22 +27,22 @@ export default function MovieCard({
               className="relative w-full h-full"
               initial={{ scale: 1 }}
               animate={{ scale: isHovered ? 1.05 : 1 }}
-              transition={{ duration: 2, ease: "circInOut" }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
             >
               <img
                 src={
-                  movie.poster_path
-                    ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+                  movie!.poster_path
+                    ? `https://image.tmdb.org/t/p/w500/${movie!.poster_path}`
                     : "/no-poster.png"
                 }
-                alt={`Poster of "${movie.title}"`}
+                alt={`Poster of "${movie!.title}"`}
                 className="w-full h-full object-cover"
               />
             </motion.div>
 
             {isHovered && (
               <motion.div
-                className="absolute inset-0 bg-black/80 flex flex-col p-4 text-white"
+                className="absolute inset-0 bg-black/80 flex flex-col p-4 text-foreground"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -58,7 +54,7 @@ export default function MovieCard({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2, duration: 0.3, ease: "circInOut" }}
                 >
-                  {movie.title}
+                  {movie!.title}
                 </motion.p>
                 <motion.p
                   className="text-sm font-normal leading-relaxed mt-2 line-clamp-4"
@@ -66,7 +62,7 @@ export default function MovieCard({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4, duration: 0.3, ease: "circInOut" }}
                 >
-                  {movie.overview}
+                  {movie!.overview}
                 </motion.p>
                 <motion.p
                   className="text-base font-medium mt-auto"
@@ -74,7 +70,7 @@ export default function MovieCard({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6, duration: 0.3, ease: "circInOut" }}
                 >
-                  Click for more details
+                  See details
                 </motion.p>
               </motion.div>
             )}
@@ -84,29 +80,35 @@ export default function MovieCard({
 
       <div className="flex flex-col justify-center space-y-1.5 flex-grow px-5 pb-5">
         <h3 className="text-xl font-semibold line-clamp-2 leading-tight">
-          {movie.title}
+          {movie!.title}
         </h3>
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
           <span className="inline-flex items-center space-x-0.5">
-            <StarFilledIcon className="w-4 h-4 text-amber-400" />
+            <motion.div
+              transition={{ type: "spring", duration: 2 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ rotate: 1080, scale: 0.9 }}
+            >
+              <StarFilledIcon className="w-4 h-4 text-amber-400" />
+            </motion.div>
             <span className="font-semibold">
-              {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
+              {movie!.vote_average ? movie!.vote_average.toFixed(1) : "N/A"}
             </span>
           </span>
 
           <span>•</span>
 
           <span className="text-muted-foreground">
-            {getLanguageName(movie.original_language)}
+            {getLanguageName(movie!.original_language ?? "en")}
           </span>
 
-          {movie.release_date && (
+          {movie!.release_date && (
             <>
               <span>•</span>
               <span className="text-muted-foreground">
                 {formatDate(
-                  parseDate(movie.release_date, "y-MM-d", new Date()),
-                  "y/MM/d",
+                  parseDate(movie!.release_date, "y-MM-d", new Date()),
+                  "MM/d/y",
                 )}
               </span>
             </>

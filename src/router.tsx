@@ -14,6 +14,7 @@ export function createRouter() {
       scrollRestoration: true,
       defaultViewTransition: true,
       defaultPreload: "intent",
+      defaultSsr: true,
       defaultErrorComponent: DefaultCatchBoundary,
       defaultNotFoundComponent: () => <NotFound />,
       context: {
