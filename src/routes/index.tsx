@@ -70,18 +70,11 @@ function Home() {
           <h1 className="text-center inline-block">
             Find{" "}
             <div className="inline-block">
+              <Clapperboard className="md:w-10 md:h-10 w-8 h-8 leading-12 md:leading-14 lg:leading-14 align-top inline-block mr-0.5 stroke-foreground" />
               <AnimatedGradientText
                 colorFrom="var(--primary)"
                 colorTo="var(--destructive)"
               >
-                <Clapperboard
-                  className="lg:w-12 lg:h-12 md:w-10 md:h-10 w-8 h-8 leading-12 md:leading-14 lg:leading-16 align-baseline inline-block mr-0.5 animate-gradient bg-gradient-to-r from-[var(--primary)] via-[var(--destructive)] to-[var(--primary)] bg-[length:300%_100%] bg-clip-text fill-transparent"
-                  style={{
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                />
                 Movies
               </AnimatedGradientText>
             </div>{" "}

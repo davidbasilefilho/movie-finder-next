@@ -11,13 +11,13 @@ export default function MovieCard({ movie }: { movie: Movie }) {
 
   return (
     <div
-      className="rounded-3xl bg-card border text-card-foreground shadow flex flex-col h-full"
+      className="rounded-3xl bg-card border text-card-foreground shadow flex flex-col h-full overflow-hidden"
       key={movie!.id}
     >
       <Link
         to="/movie/$id"
         params={{ id: movie!.id!.toFixed(0) }}
-        className="relative block aspect-[2/3] mb-4 overflow-hidden rounded-t-3xl"
+        className="relative block aspect-[2/3] mb-4 overflow-hidden"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -42,7 +42,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
 
             {isHovered && (
               <motion.div
-                className="absolute inset-0 bg-black/80 flex flex-col p-4 text-foreground"
+                className="absolute inset-0 bg-black/80 hover:backdrop-blur-sm flex flex-col p-4 text-foreground"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}

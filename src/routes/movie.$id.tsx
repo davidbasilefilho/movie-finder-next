@@ -5,6 +5,7 @@ import { getLanguageName } from "@/lib/utils";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   createFileRoute,
+  redirect,
   useCanGoBack,
   useRouter,
 } from "@tanstack/react-router";
@@ -37,10 +38,11 @@ const formatReleaseDate = (date: string | undefined) => {
 
 export const Route = createFileRoute("/movie/$id")({
   component: Movie,
-  loader: async ({ context: { queryClient }, params }) =>
-    queryClient.ensureQueryData(
+  loader: async ({ context: { queryClient }, params }) => {
+    return queryClient.ensureQueryData(
       createMovieQueryOptions({ movieId: params.id }),
-    ),
+    );
+  },
 });
 
 function Movie() {
