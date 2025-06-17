@@ -1,35 +1,29 @@
-import z from "zod/v4";
+import { type } from "arktype";
 
-export const findMovieRequestSchema = z.object({
-  id: z.number({ error: "Invalid number" }).int({ error: "Not an integer" }),
+export const findMovieByIdRequestSchema = type("string > 0").configure({
+  message: (ctx) => `${ctx.propString || "(root)"} isn't ${ctx.expected}`,
 });
 
-export type FindMovieByIdRequest = z.infer<typeof findMovieRequestSchema>;
+export type FindMovieByIdRequest = typeof findMovieByIdRequestSchema.infer;
 
-export const findPopularMoviesRequestSchema = z.object({
-  page: z
-    .number({ error: "Invalid number" })
-    .int({ error: "Not an integer" })
-    .optional()
-    .default(1),
+export const findMoviePopularMoviesRequestSchema = type(
+  "number.integer > 0"
+).configure({
+  message: (ctx) => `${ctx.propString || "(root)"} isn't ${ctx.expected}`,
 });
 
-export type FindPopularMoviesRequest = z.infer<
-  typeof findPopularMoviesRequestSchema
->;
+export type FindMoviePopularMoviesRequest =
+  typeof findMoviePopularMoviesRequestSchema.infer;
 
-export const searchSchema = z.object({
-  query: z.string({ error: "Invalid string" }),
-  include_adult: z.boolean({ error: "Invalid boolean" }),
-  primary_release_year: z.string({ error: "Invalid string" }),
-  page: z
-    .number({ error: "Invalid number" })
-    .int({ error: "Not an integer" })
-    .positive({ error: "Must be a positive integer" })
-    .default(1)
-    .nonoptional(),
-  region: z.string({ error: "Invalid string" }),
-  year: z.string({ error: "Invalid string" }),
+export const searchSchema = type({
+  query: "string >= 1 | undefined",
+  include_adult: "boolean",
+  primary_release_year: "string >= 4 | undefined",
+  page: "number.integer > 0",
+  region: "string | undefined",
+  year: "string >= 4 | undefined",
+}).configure({
+  message: (ctx) => `${ctx.propString || "(root)"} isn't ${ctx.expected}`,
 });
 
-export type SearchSchema = z.infer<typeof searchSchema>;
+export type SearchSchema = typeof searchSchema.infer;

@@ -1,13 +1,18 @@
 import { API_BASE_URL, GET_API_OPTIONS } from "@/lib/const";
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import z from "zod/v4";
-import { SearchSchema, searchSchema } from "../schema/req";
-import { findPopularMoviesResponseSchema } from "../schema/res";
+import { type } from "arktype";
+import {
+  findMovieByIdRequestSchema,
+  findMoviePopularMoviesRequestSchema,
+  SearchSchema,
+  searchSchema,
+} from "../schema/req";
+import { findTrendingMoviesResponseSchema } from "../schema/res";
 
 const fetchPopularMovies = createServerFn({ method: "GET" })
   .validator((page) => {
-    return z.number().int().parse(page);
+    return findMoviePopularMoviesRequestSchema(page);
   })
   .handler(async (ctx) => {
     const url = `/api/movies/popular/${ctx.data}`;
@@ -30,21 +35,16 @@ export const popularMoviesQueryOptions = (page: number) =>
   });
 
 export const movieServerFn = createServerFn({ method: "GET" })
-  .validator((movieId) =>
-    z
-      .number()
-      .int()
-      .parse(parseInt(movieId as string, 10)),
-  )
+  .validator((movieId) => findMovieByIdRequestSchema(movieId))
   .handler(async (ctx) => {
     const response = await fetch(
       `${API_BASE_URL}/movie/${ctx.data}`,
-      GET_API_OPTIONS,
+      GET_API_OPTIONS
     );
 
     if (!response.ok)
       throw new Error(
-        `Failed to fetch movie with id ${ctx.data}: ${response.statusText}`,
+        `Failed to fetch movie with id ${ctx.data}: ${response.statusText}`
       );
 
     return response.json();
@@ -58,7 +58,7 @@ export const createMovieQueryOptions = ({ movieId }: { movieId: string }) =>
 
 export const searchServerFn = createServerFn({ method: "GET" })
   .validator((search) => {
-    return searchSchema.parse(search);
+    return searchSchema(search);
   })
   .handler(async (ctx) => {
     const search = ctx.data as SearchSchema;
@@ -83,17 +83,17 @@ export const createSearchQueryOptions = (search: SearchSchema) =>
 
 const fetchTrendingMovies = createServerFn({ method: "GET" })
   .validator((trending) => {
-    return findPopularMoviesResponseSchema.optional().parse(trending);
+    return findTrendingMoviesResponseSchema(trending);
   })
   .handler(async () => {
     const response = await fetch(
       `${API_BASE_URL}/trending/movie/week?language=en-US`,
-      GET_API_OPTIONS,
+      GET_API_OPTIONS
     );
 
     if (!response.ok)
       throw new Error(
-        `Failed to fetch trending movies: ${response.statusText}`,
+        `Failed to fetch trending movies: ${response.statusText}`
       );
 
     return response.json();

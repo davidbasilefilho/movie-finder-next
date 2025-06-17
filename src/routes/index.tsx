@@ -41,7 +41,7 @@ function Home() {
           query,
           include_adult,
           primary_release_year,
-          page,
+          page: page.toFixed(0),
           region,
           year,
         },
@@ -64,7 +64,7 @@ function Home() {
       e.stopPropagation();
       form.handleSubmit();
     },
-    [form],
+    [form]
   );
 
   return (
@@ -102,6 +102,7 @@ function Home() {
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                       </div>
                     </field.FormControl>
+                    <field.FormMessage />
                   </field.FormItem>
                 )}
               />

@@ -69,7 +69,7 @@ export const Route = createFileRoute("/search")({
       </div>
     );
   },
-  validateSearch: (search) => searchSchema.parse(search),
+  validateSearch: (search) => searchSchema(search),
   loaderDeps: ({ search }) => ({ search }),
   loader: async ({ context: { queryClient }, deps: { search } }) => {
     return queryClient.ensureQueryData(createSearchQueryOptions(search));
@@ -114,7 +114,7 @@ function SearchComponent() {
       e.stopPropagation();
       form.handleSubmit();
     },
-    [form],
+    [form]
   );
 
   return (
@@ -289,7 +289,7 @@ function SearchComponent() {
 
           {Array.from(
             { length: endPage - startPage + 1 },
-            (_, i) => i + startPage,
+            (_, i) => i + startPage
           ).map((i) => (
             <PaginationItem key={i}>
               <Link

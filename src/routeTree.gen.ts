@@ -8,140 +8,140 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createServerRootRoute } from "@tanstack/react-start/server";
+import { createServerRootRoute } from '@tanstack/react-start/server'
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as SearchRouteImport } from "./routes/search";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as MovieIdRouteImport } from "./routes/movie.$id";
-import { ServerRoute as ApiMovieIdServerRouteImport } from "./routes/api.movie.$id";
-import { ServerRoute as ApiMoviesPopularPageServerRouteImport } from "./routes/api.movies.popular.$page";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as MovieIdRouteImport } from './routes/movie.$id'
+import { ServerRoute as ApiMovieIdServerRouteImport } from './routes/api.movie.$id'
+import { ServerRoute as ApiMoviesPopularPageServerRouteImport } from './routes/api.movies.popular.$page'
 
-const rootServerRouteImport = createServerRootRoute();
+const rootServerRouteImport = createServerRootRoute()
 
 const SearchRoute = SearchRouteImport.update({
-  id: "/search",
-  path: "/search",
+  id: '/search',
+  path: '/search',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const MovieIdRoute = MovieIdRouteImport.update({
-  id: "/movie/$id",
-  path: "/movie/$id",
+  id: '/movie/$id',
+  path: '/movie/$id',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ApiMovieIdServerRoute = ApiMovieIdServerRouteImport.update({
-  id: "/api/movie/$id",
-  path: "/api/movie/$id",
+  id: '/api/movie/$id',
+  path: '/api/movie/$id',
   getParentRoute: () => rootServerRouteImport,
-} as any);
+} as any)
 const ApiMoviesPopularPageServerRoute =
   ApiMoviesPopularPageServerRouteImport.update({
-    id: "/api/movies/popular/$page",
-    path: "/api/movies/popular/$page",
+    id: '/api/movies/popular/$page',
+    path: '/api/movies/popular/$page',
     getParentRoute: () => rootServerRouteImport,
-  } as any);
+  } as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/search": typeof SearchRoute;
-  "/movie/$id": typeof MovieIdRoute;
+  '/': typeof IndexRoute
+  '/search': typeof SearchRoute
+  '/movie/$id': typeof MovieIdRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/search": typeof SearchRoute;
-  "/movie/$id": typeof MovieIdRoute;
+  '/': typeof IndexRoute
+  '/search': typeof SearchRoute
+  '/movie/$id': typeof MovieIdRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/search": typeof SearchRoute;
-  "/movie/$id": typeof MovieIdRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/search': typeof SearchRoute
+  '/movie/$id': typeof MovieIdRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/search" | "/movie/$id";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/search" | "/movie/$id";
-  id: "__root__" | "/" | "/search" | "/movie/$id";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/search' | '/movie/$id'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/search' | '/movie/$id'
+  id: '__root__' | '/' | '/search' | '/movie/$id'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  SearchRoute: typeof SearchRoute;
-  MovieIdRoute: typeof MovieIdRoute;
+  IndexRoute: typeof IndexRoute
+  SearchRoute: typeof SearchRoute
+  MovieIdRoute: typeof MovieIdRoute
 }
 export interface FileServerRoutesByFullPath {
-  "/api/movie/$id": typeof ApiMovieIdServerRoute;
-  "/api/movies/popular/$page": typeof ApiMoviesPopularPageServerRoute;
+  '/api/movie/$id': typeof ApiMovieIdServerRoute
+  '/api/movies/popular/$page': typeof ApiMoviesPopularPageServerRoute
 }
 export interface FileServerRoutesByTo {
-  "/api/movie/$id": typeof ApiMovieIdServerRoute;
-  "/api/movies/popular/$page": typeof ApiMoviesPopularPageServerRoute;
+  '/api/movie/$id': typeof ApiMovieIdServerRoute
+  '/api/movies/popular/$page': typeof ApiMoviesPopularPageServerRoute
 }
 export interface FileServerRoutesById {
-  __root__: typeof rootServerRouteImport;
-  "/api/movie/$id": typeof ApiMovieIdServerRoute;
-  "/api/movies/popular/$page": typeof ApiMoviesPopularPageServerRoute;
+  __root__: typeof rootServerRouteImport
+  '/api/movie/$id': typeof ApiMovieIdServerRoute
+  '/api/movies/popular/$page': typeof ApiMoviesPopularPageServerRoute
 }
 export interface FileServerRouteTypes {
-  fileServerRoutesByFullPath: FileServerRoutesByFullPath;
-  fullPaths: "/api/movie/$id" | "/api/movies/popular/$page";
-  fileServerRoutesByTo: FileServerRoutesByTo;
-  to: "/api/movie/$id" | "/api/movies/popular/$page";
-  id: "__root__" | "/api/movie/$id" | "/api/movies/popular/$page";
-  fileServerRoutesById: FileServerRoutesById;
+  fileServerRoutesByFullPath: FileServerRoutesByFullPath
+  fullPaths: '/api/movie/$id' | '/api/movies/popular/$page'
+  fileServerRoutesByTo: FileServerRoutesByTo
+  to: '/api/movie/$id' | '/api/movies/popular/$page'
+  id: '__root__' | '/api/movie/$id' | '/api/movies/popular/$page'
+  fileServerRoutesById: FileServerRoutesById
 }
 export interface RootServerRouteChildren {
-  ApiMovieIdServerRoute: typeof ApiMovieIdServerRoute;
-  ApiMoviesPopularPageServerRoute: typeof ApiMoviesPopularPageServerRoute;
+  ApiMovieIdServerRoute: typeof ApiMovieIdServerRoute
+  ApiMoviesPopularPageServerRoute: typeof ApiMoviesPopularPageServerRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/search": {
-      id: "/search";
-      path: "/search";
-      fullPath: "/search";
-      preLoaderRoute: typeof SearchRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/movie/$id": {
-      id: "/movie/$id";
-      path: "/movie/$id";
-      fullPath: "/movie/$id";
-      preLoaderRoute: typeof MovieIdRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/movie/$id': {
+      id: '/movie/$id'
+      path: '/movie/$id'
+      fullPath: '/movie/$id'
+      preLoaderRoute: typeof MovieIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
-declare module "@tanstack/react-start/server" {
+declare module '@tanstack/react-start/server' {
   interface ServerFileRoutesByPath {
-    "/api/movie/$id": {
-      id: "/api/movie/$id";
-      path: "/api/movie/$id";
-      fullPath: "/api/movie/$id";
-      preLoaderRoute: typeof ApiMovieIdServerRouteImport;
-      parentRoute: typeof rootServerRouteImport;
-    };
-    "/api/movies/popular/$page": {
-      id: "/api/movies/popular/$page";
-      path: "/api/movies/popular/$page";
-      fullPath: "/api/movies/popular/$page";
-      preLoaderRoute: typeof ApiMoviesPopularPageServerRouteImport;
-      parentRoute: typeof rootServerRouteImport;
-    };
+    '/api/movie/$id': {
+      id: '/api/movie/$id'
+      path: '/api/movie/$id'
+      fullPath: '/api/movie/$id'
+      preLoaderRoute: typeof ApiMovieIdServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/api/movies/popular/$page': {
+      id: '/api/movies/popular/$page'
+      path: '/api/movies/popular/$page'
+      fullPath: '/api/movies/popular/$page'
+      preLoaderRoute: typeof ApiMoviesPopularPageServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
   }
 }
 
@@ -149,14 +149,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SearchRoute: SearchRoute,
   MovieIdRoute: MovieIdRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 const rootServerRouteChildren: RootServerRouteChildren = {
   ApiMovieIdServerRoute: ApiMovieIdServerRoute,
   ApiMoviesPopularPageServerRoute: ApiMoviesPopularPageServerRoute,
-};
+}
 export const serverRouteTree = rootServerRouteImport
   ._addFileChildren(rootServerRouteChildren)
-  ._addFileTypes<FileServerRouteTypes>();
+  ._addFileTypes<FileServerRouteTypes>()
