@@ -1,4 +1,5 @@
 import { Footer } from "@/components/footer";
+import { Loading } from "@/components/loading";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 import MovieCard from "@/components/movie-card";
 import { QueryInput } from "@/components/query-input";
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/")({
       queryClient.ensureQueryData(popularMoviesQueryOptions(1)),
     ];
   },
+  pendingComponent: () => <Loading />,
 });
 
 function Home() {
@@ -41,7 +43,7 @@ function Home() {
           query,
           include_adult,
           primary_release_year,
-          page: page.toFixed(0),
+          page,
           region,
           year,
         },

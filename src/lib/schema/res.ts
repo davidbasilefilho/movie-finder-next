@@ -40,3 +40,16 @@ export const findTrendingMoviesResponseSchema =
   findPopularMoviesResponseSchema.or("undefined");
 export type FindTrendingMoviesResponse =
   typeof findTrendingMoviesResponseSchema.infer;
+
+export const searchMoviesResponseSchema = movieScope
+  .type({
+    results: "Movie[] | null | undefined",
+    total_pages: "number.integer >= 1 | null | undefined",
+    total_results: "number.integer >= 0 | null | undefined",
+    page: "number.integer >= 1 | null | undefined",
+  })
+  .configure({
+    message: (ctx) => `${ctx.propString || "(root)"} isn't ${ctx.expected}`,
+  });
+
+export type SearchMoviesResponse = typeof searchMoviesResponseSchema.infer;

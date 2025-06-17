@@ -1,14 +1,12 @@
 import { API_BASE_URL, GET_API_OPTIONS } from "@/lib/const";
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { type } from "arktype";
 import {
   findMovieByIdRequestSchema,
   findMoviePopularMoviesRequestSchema,
   SearchSchema,
   searchSchema,
 } from "../schema/req";
-import { findTrendingMoviesResponseSchema } from "../schema/res";
 
 const fetchPopularMovies = createServerFn({ method: "GET" })
   .validator((page) => {
@@ -62,12 +60,16 @@ export const searchServerFn = createServerFn({ method: "GET" })
   })
   .handler(async (ctx) => {
     const search = ctx.data as SearchSchema;
-    const params = new URLSearchParams({
-      ...search,
-      include_adult: search.include_adult ? "true" : "false",
-      page: search.page.toString(),
-    });
+    const params = new URLSearchParams();
+    params.append("query", search.query || "");
+    params.append("include_adult", String(search.include_adult ?? false));
+    params.append("primary_release_year", search.primary_release_year ?? "");
+    params.append("page", search.page ? search.page?.toString() : "1");
+    params.append("region", search.region ?? "");
+    params.append("year", search.year ?? "");
+
     const url = `${API_BASE_URL}/search/movie?${params.toString()}`;
+
     const response = await fetch(url, GET_API_OPTIONS);
     if (!response.ok) {
       throw new Error(`Error fetching search results: ${response.statusText}`);
@@ -81,11 +83,8 @@ export const createSearchQueryOptions = (search: SearchSchema) =>
     queryFn: async () => searchServerFn({ data: search }),
   });
 
-const fetchTrendingMovies = createServerFn({ method: "GET" })
-  .validator((trending) => {
-    return findTrendingMoviesResponseSchema(trending);
-  })
-  .handler(async () => {
+const fetchTrendingMovies = createServerFn({ method: "GET" }).handler(
+  async () => {
     const response = await fetch(
       `${API_BASE_URL}/trending/movie/week?language=en-US`,
       GET_API_OPTIONS,
@@ -97,7 +96,8 @@ const fetchTrendingMovies = createServerFn({ method: "GET" })
       );
 
     return response.json();
-  });
+  },
+);
 
 export const trendingMoviesQueryOptions = () =>
   queryOptions({

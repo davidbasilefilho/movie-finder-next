@@ -1,3 +1,4 @@
+import { Loading } from "@/components/loading";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { createMovieQueryOptions } from "@/lib/query/options";
@@ -36,6 +37,7 @@ const formatReleaseDate = (date: string | undefined) => {
 
 export const Route = createFileRoute("/movie/$id")({
   component: Movie,
+  pendingComponent: () => <Loading />,
   loader: async ({ context: { queryClient }, params }) => {
     return queryClient.ensureQueryData(
       createMovieQueryOptions({ movieId: params.id }),

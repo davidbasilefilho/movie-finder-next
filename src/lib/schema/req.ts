@@ -17,9 +17,9 @@ export type FindMoviePopularMoviesRequest =
 
 export const searchSchema = type({
   query: "string >= 1 | undefined",
-  include_adult: "boolean",
+  include_adult: "boolean | undefined",
   primary_release_year: "string >= 4 | undefined",
-  page: "number.integer > 0",
+  page: "number.integer > 0 | undefined",
   region: "string | undefined",
   year: "string >= 4 | undefined",
 }).configure({

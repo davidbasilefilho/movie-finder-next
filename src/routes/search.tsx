@@ -1,3 +1,4 @@
+import { Loading } from "@/components/loading";
 import MovieCard from "@/components/movie-card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -16,7 +17,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { useAppForm } from "@/components/ui/tanstack-form";
 import { createSearchQueryOptions } from "@/lib/query/options";
-import { searchSchema } from "@/lib/schema/req";
+import { searchSchema, SearchSchema } from "@/lib/schema/req";
 import { Movie } from "@/lib/schema/res";
 import {
   useQueryErrorResetBoundary,
@@ -33,6 +34,7 @@ import { useCallback, useEffect } from "react";
 
 export const Route = createFileRoute("/search")({
   component: SearchComponent,
+  pendingComponent: () => <Loading />,
   errorComponent: ({ error }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const router = useRouter();
@@ -72,6 +74,16 @@ export const Route = createFileRoute("/search")({
   validateSearch: (search) => searchSchema(search),
   loaderDeps: ({ search }) => ({ search }),
   loader: async ({ context: { queryClient }, deps: { search } }) => {
+    // If searchSchema validation failed, search will be an error object
+    // In that case, we should let the error boundary handle it
+    if (
+      !search ||
+      typeof search !== "object" ||
+      "byPath" in search ||
+      "flatByPath" in search
+    ) {
+      throw new Error("Invalid search parameters");
+    }
     return queryClient.ensureQueryData(createSearchQueryOptions(search));
   },
 });
@@ -79,26 +91,34 @@ export const Route = createFileRoute("/search")({
 function SearchComponent() {
   const search = Route.useSearch();
   const navigate = useNavigate();
+
+  // Type guard to ensure we have a valid search object
+  const isValidSearch = (search: any): search is SearchSchema => {
+    return (
+      search &&
+      typeof search === "object" &&
+      !search.byPath &&
+      !search.flatByPath
+    );
+  };
+
+  if (!isValidSearch(search)) {
+    throw new Error("Invalid search parameters");
+  }
+
   const { data } = useSuspenseQuery(createSearchQueryOptions(search));
   const form = useAppForm({
-    validators: { onChange: searchSchema },
+    validators: { onChange: ({ value }) => searchSchema(value) },
     onSubmit: ({ value }) =>
       navigate({
         to: "/search",
-        search: {
-          query: value.query,
-          include_adult: value.include_adult,
-          primary_release_year: value.primary_release_year,
-          page: value.page,
-          region: value.region,
-          year: value.year,
-        },
+        search: value,
       }),
     defaultValues: { ...search, query: decodeURI(search.query ?? "") },
   });
 
   const currentPage = search.page || 1;
-  const totalPages = data.total_pages;
+  const totalPages = data?.total_pages ?? 1;
   const pageRange = 6; // Number of page buttons to show
 
   let startPage = Math.max(1, currentPage - Math.floor(pageRange / 2));
@@ -107,7 +127,6 @@ function SearchComponent() {
   if (endPage - startPage + 1 < pageRange) {
     startPage = Math.max(1, endPage - pageRange + 1);
   }
-
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -116,6 +135,15 @@ function SearchComponent() {
     },
     [form],
   );
+
+  // Helper function to safely create search params from potentially invalid search object
+  const createSafeSearchParams = (searchParams: any): SearchSchema => {
+    if (isValidSearch(searchParams)) {
+      return searchParams;
+    }
+    // Fallback to current valid search if the previous search is invalid
+    return search;
+  };
 
   return (
     <div className="px-6 py-4 container mx-auto">
@@ -141,7 +169,7 @@ function SearchComponent() {
                 <field.FormControl>
                   <Input
                     placeholder="Search through hundreds of movies..."
-                    value={field.state.value}
+                    value={field.state.value ?? ""}
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
                   />
@@ -162,8 +190,10 @@ function SearchComponent() {
                   <Input
                     placeholder="2020, 1971, etc."
                     type="number"
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
+                    value={field.state.value ?? ""}
+                    onChange={(e) =>
+                      field.handleChange(e.target.value || undefined)
+                    }
                     onBlur={field.handleBlur}
                   />
                 </field.FormControl>
@@ -183,8 +213,10 @@ function SearchComponent() {
                   <Input
                     placeholder="2021, 1972, etc."
                     type="number"
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
+                    value={field.state.value ?? ""}
+                    onChange={(e) =>
+                      field.handleChange(e.target.value || undefined)
+                    }
                     onBlur={field.handleBlur}
                   />
                 </field.FormControl>
@@ -206,12 +238,13 @@ function SearchComponent() {
                   </field.FormDescription>
                   <field.FormControl>
                     <Switch
-                      checked={field.state.value}
+                      checked={field.state.value ?? false}
                       onCheckedChange={(e) => field.handleChange(e)}
                       onBlur={field.handleBlur}
                     />
                   </field.FormControl>
                 </div>
+                <field.FormMessage />
               </field.FormItem>
             )}
           />
@@ -228,7 +261,7 @@ function SearchComponent() {
       </form.AppForm>
 
       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {data.results.map((movie: Movie) => (
+        {data?.results?.map((movie: Movie) => (
           <MovieCard key={movie?.id} movie={movie} />
         ))}
       </div>
@@ -244,15 +277,19 @@ function SearchComponent() {
                 className: "gap-1 pl-2.5",
               })}
               aria-label="Go to previous page"
-              search={(prev) => ({
-                ...prev,
-                primary_release_year: prev.primary_release_year ?? "",
-                region: prev.region || "",
-                year: prev.year ?? "",
-                query: prev.query!,
-                include_adult: prev.include_adult ?? false,
-                page: Math.max(1, prev.page ? prev.page - 1 : 1),
-              })}
+              search={(prev) => {
+                const safeSearchParams = createSafeSearchParams(prev);
+                return {
+                  ...safeSearchParams,
+                  primary_release_year:
+                    safeSearchParams.primary_release_year ?? undefined,
+                  region: safeSearchParams.region ?? undefined,
+                  year: safeSearchParams.year ?? undefined,
+                  query: safeSearchParams.query ?? "",
+                  include_adult: safeSearchParams.include_adult ?? false,
+                  page: Math.max(1, (safeSearchParams.page ?? 1) - 1),
+                };
+              }}
             >
               <ChevronLeft className="h-4 w-4" />
               <span>Previous</span>
@@ -268,15 +305,19 @@ function SearchComponent() {
                     variant: "outline",
                     size: "icon",
                   })}
-                  search={(prev) => ({
-                    ...prev,
-                    primary_release_year: prev.primary_release_year ?? "",
-                    region: prev.region || "",
-                    year: prev.year ?? "",
-                    query: prev.query!,
-                    include_adult: prev.include_adult ?? false,
-                    page: 1,
-                  })}
+                  search={(prev) => {
+                    const safeSearchParams = createSafeSearchParams(prev);
+                    return {
+                      ...safeSearchParams,
+                      primary_release_year:
+                        safeSearchParams.primary_release_year ?? undefined,
+                      region: safeSearchParams.region ?? undefined,
+                      year: safeSearchParams.year ?? undefined,
+                      query: safeSearchParams.query ?? "",
+                      include_adult: safeSearchParams.include_adult ?? false,
+                      page: 1,
+                    };
+                  }}
                 >
                   1
                 </Link>
@@ -298,15 +339,19 @@ function SearchComponent() {
                   variant: currentPage === i ? "default" : "outline",
                   size: "icon",
                 })}
-                search={(prev) => ({
-                  ...prev,
-                  primary_release_year: prev.primary_release_year ?? "",
-                  region: prev.region || "",
-                  year: prev.year ?? "",
-                  query: prev.query!,
-                  include_adult: prev.include_adult ?? false,
-                  page: i,
-                })}
+                search={(prev) => {
+                  const safeSearchParams = createSafeSearchParams(prev);
+                  return {
+                    ...safeSearchParams,
+                    primary_release_year:
+                      safeSearchParams.primary_release_year ?? undefined,
+                    region: safeSearchParams.region ?? undefined,
+                    year: safeSearchParams.year ?? undefined,
+                    query: safeSearchParams.query ?? "",
+                    include_adult: safeSearchParams.include_adult ?? false,
+                    page: i,
+                  };
+                }}
               >
                 {i}
               </Link>
@@ -325,15 +370,19 @@ function SearchComponent() {
                     variant: "outline",
                     size: "icon",
                   })}
-                  search={(prev) => ({
-                    ...prev,
-                    primary_release_year: prev.primary_release_year ?? "",
-                    region: prev.region || "",
-                    year: prev.year ?? "",
-                    query: prev.query!,
-                    include_adult: prev.include_adult ?? false,
-                    page: totalPages,
-                  })}
+                  search={(prev) => {
+                    const safeSearchParams = createSafeSearchParams(prev);
+                    return {
+                      ...safeSearchParams,
+                      primary_release_year:
+                        safeSearchParams.primary_release_year ?? undefined,
+                      region: safeSearchParams.region ?? undefined,
+                      year: safeSearchParams.year ?? undefined,
+                      query: safeSearchParams.query ?? "",
+                      include_adult: safeSearchParams.include_adult ?? false,
+                      page: totalPages,
+                    };
+                  }}
                 >
                   {totalPages}
                 </Link>
@@ -344,15 +393,22 @@ function SearchComponent() {
           <PaginationItem>
             <Link
               to="/search"
-              search={(prev) => ({
-                ...prev,
-                primary_release_year: prev.primary_release_year ?? "",
-                region: prev.region || "",
-                year: prev.year ?? "",
-                query: prev.query!,
-                include_adult: prev.include_adult ?? false,
-                page: Math.min(data.total_pages, (prev.page || 1) + 1),
-              })}
+              search={(prev) => {
+                const safeSearchParams = createSafeSearchParams(prev);
+                return {
+                  ...safeSearchParams,
+                  primary_release_year:
+                    safeSearchParams.primary_release_year ?? undefined,
+                  region: safeSearchParams.region ?? undefined,
+                  year: safeSearchParams.year ?? undefined,
+                  query: safeSearchParams.query ?? "",
+                  include_adult: safeSearchParams.include_adult ?? false,
+                  page: Math.min(
+                    data?.total_pages ?? 1,
+                    (safeSearchParams.page || 1) + 1,
+                  ),
+                };
+              }}
               aria-label="Go to next page"
               className={buttonVariants({
                 variant: "outline",

@@ -14,10 +14,10 @@ export default defineConfig({
   plugins: [
     tsConfigPaths({ projects: ["./tsconfig.json"] }),
     tanstackStart({ target: "vercel" }),
-    // react({
-    //   babel: {
-    //     plugins: [["babel-plugin-react-compiler", ReactCompilerConfig]],
-    //   },
-    // }),
+    react({
+      babel: {
+        plugins: [["babel-plugin-react-compiler", ReactCompilerConfig]],
+      },
+    }),
   ],
 });

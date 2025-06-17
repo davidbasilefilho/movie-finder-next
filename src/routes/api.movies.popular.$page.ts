@@ -1,3 +1,4 @@
+import { GET_API_OPTIONS } from "@/lib/const";
 import { createServerFileRoute } from "@tanstack/react-start/server";
 
 export const ServerRoute = createServerFileRoute(
@@ -9,15 +10,8 @@ export const ServerRoute = createServerFileRoute(
 
     console.info(`Fetching popular movies for page=${pageNumber}...`);
     const url = `https://api.themoviedb.org/3/movie/popular?page=${pageNumber}`;
-    const options = {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
-      },
-    };
 
-    const res = await fetch(url, options);
+    const res = await fetch(url, GET_API_OPTIONS);
     if (!res.ok) {
       return new Response(`Error fetching popular movies: ${res.statusText}`, {
         status: res.status,
