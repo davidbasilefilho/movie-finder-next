@@ -85,10 +85,7 @@ export const createSearchQueryOptions = (search: SearchSchema) =>
 
 const fetchTrendingMovies = createServerFn({ method: "GET" }).handler(
   async () => {
-    const response = await fetch(
-      `${API_BASE_URL}/trending/movie/week?language=en-US`,
-      GET_API_OPTIONS,
-    );
+    const response = await fetch("/api/movies/trending");
 
     if (!response.ok)
       throw new Error(
