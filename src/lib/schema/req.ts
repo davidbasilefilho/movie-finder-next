@@ -7,7 +7,7 @@ export const findMovieByIdRequestSchema = type("string > 0").configure({
 export type FindMovieByIdRequest = typeof findMovieByIdRequestSchema.infer;
 
 export const findMoviePopularMoviesRequestSchema = type(
-  "number.integer > 0"
+  "number.integer > 0",
 ).configure({
   message: (ctx) => `${ctx.propString || "(root)"} isn't ${ctx.expected}`,
 });

@@ -39,12 +39,12 @@ export const movieServerFn = createServerFn({ method: "GET" })
   .handler(async (ctx) => {
     const response = await fetch(
       `${API_BASE_URL}/movie/${ctx.data}`,
-      GET_API_OPTIONS
+      GET_API_OPTIONS,
     );
 
     if (!response.ok)
       throw new Error(
-        `Failed to fetch movie with id ${ctx.data}: ${response.statusText}`
+        `Failed to fetch movie with id ${ctx.data}: ${response.statusText}`,
       );
 
     return response.json();
@@ -88,12 +88,12 @@ const fetchTrendingMovies = createServerFn({ method: "GET" })
   .handler(async () => {
     const response = await fetch(
       `${API_BASE_URL}/trending/movie/week?language=en-US`,
-      GET_API_OPTIONS
+      GET_API_OPTIONS,
     );
 
     if (!response.ok)
       throw new Error(
-        `Failed to fetch trending movies: ${response.statusText}`
+        `Failed to fetch trending movies: ${response.statusText}`,
       );
 
     return response.json();

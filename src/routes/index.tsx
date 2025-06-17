@@ -64,7 +64,7 @@ function Home() {
       e.stopPropagation();
       form.handleSubmit();
     },
-    [form]
+    [form],
   );
 
   return (
