@@ -202,8 +202,8 @@ function SearchComponent() {
                 <field.FormLabel className="ml-2 mb-2">
                   Include adult
                 </field.FormLabel>
-                <div className="flex flex-row items-center justify-between border rounded-md text-base h-9 px-3 py-1 shadow-xs">
-                  <field.FormDescription className="mt-0 text-sm leading-5">
+                <div className="flex flex-row items-center justify-between border rounded-md text-base min-h-9 px-3 py-1 shadow-xs">
+                  <field.FormDescription className="mt-0 text-sm leading-4 text-wrap">
                     Include adult films, NSFW, 18+ content, etc.
                   </field.FormDescription>
                   <field.FormControl>
