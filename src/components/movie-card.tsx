@@ -11,20 +11,20 @@ export default function MovieCard({ movie }: { movie: Movie }) {
 
   return (
     <div
-      className="rounded-3xl bg-card border text-card-foreground shadow flex flex-col h-full overflow-hidden"
+      className="rounded-3xl bg-card border text-card-foreground shadow h-full overflow-hidden flex flex-col"
       key={movie!.id}
     >
       <Link
         to="/movie/$id"
         params={{ id: movie!.id!.toFixed(0) }}
-        className="relative block aspect-[2/3] mb-4 overflow-hidden"
+        className="aspect-[2/3] mb-4 overflow-hidden"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="absolute inset-0">
+        <div className="relative">
           <AnimatePresence>
             <motion.div
-              className="relative w-full h-full"
+              className="w-full h-full"
               initial={{ scale: 1 }}
               animate={{ scale: isHovered ? 1.05 : 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -42,7 +42,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
 
             {isHovered && (
               <motion.div
-                className="absolute inset-0 bg-black/80 hover:backdrop-blur-sm flex flex-col p-4 text-foreground"
+                className="absolute inset-0 bg-black/80 hover:backdrop-blur-sm p-6 text-foreground flex flex-col" // Increased padding from p-4 to p-6
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -57,7 +57,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
                   {movie!.title}
                 </motion.p>
                 <motion.p
-                  className="text-sm font-normal leading-relaxed mt-2 line-clamp-4"
+                  className="text-sm font-normal leading-relaxed mt-2 flex-grow overflow-hidden" // Removed line-clamp-4
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4, duration: 0.3, ease: "circInOut" }}

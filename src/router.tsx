@@ -1,9 +1,14 @@
+import {
+  dehydrate,
+  hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { routerWithQueryClient } from "@tanstack/react-router-with-query";
-import { QueryClient } from "@tanstack/react-query";
-import { routeTree } from "./routeTree.gen";
 import { DefaultCatchBoundary } from "./components/default-catch-boundary";
 import { NotFound } from "./components/not-found";
+import { routeTree } from "./routeTree.gen";
 
 export function createRouter() {
   const queryClient = new QueryClient();
@@ -19,6 +24,25 @@ export function createRouter() {
       defaultNotFoundComponent: () => <NotFound />,
       context: {
         queryClient,
+      },
+
+      dehydrate: () => {
+        return {
+          queryClientState: dehydrate(queryClient),
+        };
+      },
+      // On the client, hydrate the loader client with the data
+      // we dehydrated on the server
+      hydrate: (dehydrated) => {
+        hydrate(queryClient, dehydrated.queryClientState);
+      },
+      // Optionally, we can use `Wrap` to wrap our router in the loader client provider
+      Wrap: ({ children }) => {
+        return (
+          <QueryClientProvider client={queryClient}>
+            {children}
+          </QueryClientProvider>
+        );
       },
     }),
     queryClient,

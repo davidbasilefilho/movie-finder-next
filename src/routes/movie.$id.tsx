@@ -5,7 +5,6 @@ import { getLanguageName } from "@/lib/utils";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   createFileRoute,
-  redirect,
   useCanGoBack,
   useRouter,
 } from "@tanstack/react-router";
@@ -20,7 +19,6 @@ import {
   Star,
   TrendingUp,
 } from "lucide-react";
-import { z } from "zod/v4";
 
 function formatCurrency(amount: number): string {
   return new Intl.NumberFormat("en-US", {

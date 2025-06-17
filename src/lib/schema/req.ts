@@ -1,13 +1,17 @@
 import z from "zod/v4";
 
 export const findMovieRequestSchema = z.object({
-  id: z.number().int(),
+  id: z.number({ error: "Invalid number" }).int({ error: "Not an integer" }),
 });
 
 export type FindMovieByIdRequest = z.infer<typeof findMovieRequestSchema>;
 
 export const findPopularMoviesRequestSchema = z.object({
-  page: z.number().int().optional().default(1),
+  page: z
+    .number({ error: "Invalid number" })
+    .int({ error: "Not an integer" })
+    .optional()
+    .default(1),
 });
 
 export type FindPopularMoviesRequest = z.infer<
@@ -15,12 +19,17 @@ export type FindPopularMoviesRequest = z.infer<
 >;
 
 export const searchSchema = z.object({
-  query: z.string(),
-  include_adult: z.boolean(),
-  primary_release_year: z.string(),
-  page: z.number().int().positive().default(1).nonoptional(),
-  region: z.string(),
-  year: z.string(),
+  query: z.string({ error: "Invalid string" }),
+  include_adult: z.boolean({ error: "Invalid boolean" }),
+  primary_release_year: z.string({ error: "Invalid string" }),
+  page: z
+    .number({ error: "Invalid number" })
+    .int({ error: "Not an integer" })
+    .positive({ error: "Must be a positive integer" })
+    .default(1)
+    .nonoptional(),
+  region: z.string({ error: "Invalid string" }),
+  year: z.string({ error: "Invalid string" }),
 });
 
 export type SearchSchema = z.infer<typeof searchSchema>;

@@ -1,5 +1,5 @@
-import { createServerFileRoute } from "@tanstack/react-start/server";
 import { json } from "@tanstack/react-start";
+import { createServerFileRoute } from "@tanstack/react-start/server";
 
 export const ServerRoute = createServerFileRoute("/api/movie/$id").methods({
   GET: async ({ params }) => {

@@ -15,12 +15,10 @@ import {
 } from "@/components/ui/pagination";
 import { Switch } from "@/components/ui/switch";
 import { useAppForm } from "@/components/ui/tanstack-form";
-import { API_BASE_URL, GET_API_OPTIONS } from "@/lib/const";
 import { createSearchQueryOptions } from "@/lib/query/options";
-import { type SearchSchema, searchSchema } from "@/lib/schema/req";
+import { searchSchema } from "@/lib/schema/req";
 import { Movie } from "@/lib/schema/res";
 import {
-  queryOptions,
   useQueryErrorResetBoundary,
   useSuspenseQuery,
 } from "@tanstack/react-query";

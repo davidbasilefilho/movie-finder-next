@@ -3,6 +3,7 @@ import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import z from "zod/v4";
 import { SearchSchema, searchSchema } from "../schema/req";
+import { findPopularMoviesResponseSchema } from "../schema/res";
 
 const fetchPopularMovies = createServerFn({ method: "GET" })
   .validator((page) => {
@@ -52,7 +53,6 @@ export const movieServerFn = createServerFn({ method: "GET" })
 export const createMovieQueryOptions = ({ movieId }: { movieId: string }) =>
   queryOptions({
     queryKey: ["movie", movieId],
-    refetchOnWindowFocus: false,
     queryFn: async () => movieServerFn({ data: movieId }),
   });
 
@@ -78,6 +78,29 @@ export const searchServerFn = createServerFn({ method: "GET" })
 export const createSearchQueryOptions = (search: SearchSchema) =>
   queryOptions({
     queryKey: ["search", search],
-    refetchOnWindowFocus: false,
     queryFn: async () => searchServerFn({ data: search }),
+  });
+
+const fetchTrendingMovies = createServerFn({ method: "GET" })
+  .validator((trending) => {
+    return findPopularMoviesResponseSchema.optional().parse(trending);
+  })
+  .handler(async () => {
+    const response = await fetch(
+      `${API_BASE_URL}/trending/movie/week?language=en-US`,
+      GET_API_OPTIONS,
+    );
+
+    if (!response.ok)
+      throw new Error(
+        `Failed to fetch trending movies: ${response.statusText}`,
+      );
+
+    return response.json();
+  });
+
+export const trendingMoviesQueryOptions = () =>
+  queryOptions({
+    queryKey: ["trendingMovies"],
+    queryFn: () => fetchTrendingMovies(),
   });

@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -195,7 +196,7 @@
   @apply mt-4;
 
   & ul {
-    @apply flex flex-row overflow-y-auto gap-5 md:gap-1 w-full overflow-scroll pb-4;
+    @apply flex flex-row overflow-y-auto gap-5 md:gap-1 max-w-fit pb-4;
   }
 
   & ul li {

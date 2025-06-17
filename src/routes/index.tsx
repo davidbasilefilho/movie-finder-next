@@ -1,29 +1,33 @@
 import { Footer } from "@/components/footer";
-import { Search, Send } from "lucide-react";
-import { QueryInput } from "@/components/query-input";
-import { Clapperboard } from "lucide-react";
-import { useAppForm } from "@/components/ui/tanstack-form";
-import { zodValidator } from "@tanstack/zod-adapter";
+import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 import MovieCard from "@/components/movie-card";
-import { popularMoviesQueryOptions } from "@/lib/query/options";
-import { findPopularMoviesResponseSchema } from "@/lib/schema/res";
+import { QueryInput } from "@/components/query-input";
+import { TrendingMovies } from "@/components/trending-movies";
+import { useAppForm } from "@/components/ui/tanstack-form";
+import {
+  popularMoviesQueryOptions,
+  trendingMoviesQueryOptions,
+} from "@/lib/query/options";
+import { searchSchema } from "@/lib/schema/req";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Clapperboard, Search } from "lucide-react";
 import { useCallback, useRef } from "react";
-import { searchSchema } from "@/lib/schema/req";
-import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
-import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   component: Home,
-  loader: ({ context }) => {
-    return context.queryClient.ensureQueryData(popularMoviesQueryOptions(1));
+  loader: ({ context: { queryClient } }) => {
+    return [
+      queryClient.ensureQueryData(trendingMoviesQueryOptions()),
+      queryClient.ensureQueryData(popularMoviesQueryOptions(1)),
+    ];
   },
 });
 
 function Home() {
   const parentRef = useRef<HTMLDivElement>(null);
   const popularMoviesQuery = useSuspenseQuery(popularMoviesQueryOptions(1));
+  const trendingMoviesQuery = useSuspenseQuery(trendingMoviesQueryOptions());
   const navigate = useNavigate();
   const form = useAppForm({
     validators: { onChange: searchSchema },
@@ -106,14 +110,27 @@ function Home() {
         </div>
       </div>
 
-      <div
-        ref={parentRef}
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 pt-0 container mx-auto"
-      >
-        {popularMoviesQuery.data.results.map((movie) => (
-          <div key={movie.id}>{movie.id && <MovieCard movie={movie} />}</div>
-        ))}
-      </div>
+      <section>
+        <div className="trending px-4 container mx-auto">
+          <h2>Trending weekly</h2>
+          <ul className="flex flex-row w-full mx-auto px-1 gap-5 md:gap-1 pb-4">
+            {trendingMoviesQuery?.data.results
+              .slice(0, 8)
+              .map((movie, index) => (
+                <TrendingMovies key={index} movie={movie} index={index} />
+              ))}
+          </ul>
+        </div>
+      </section>
+
+      <section ref={parentRef} className="p-4 pt-0 container mx-auto">
+        <h2 className="mb-4">Popular movies</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {popularMoviesQuery.data.results.map((movie) => (
+            <div key={movie.id}>{movie.id && <MovieCard movie={movie} />}</div>
+          ))}
+        </div>
+      </section>
       <Footer />
     </main>
   );
