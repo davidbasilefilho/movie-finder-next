@@ -12,7 +12,6 @@ import { createServerRootRoute } from "@tanstack/react-start/server";
 
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as SearchRouteImport } from "./routes/search";
-import { Route as RedirectRouteImport } from "./routes/redirect";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as MovieIdRouteImport } from "./routes/movie.$id";
 import { ServerRoute as ApiMovieIdServerRouteImport } from "./routes/api.movie.$id";
@@ -23,11 +22,6 @@ const rootServerRouteImport = createServerRootRoute();
 const SearchRoute = SearchRouteImport.update({
   id: "/search",
   path: "/search",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const RedirectRoute = RedirectRouteImport.update({
-  id: "/redirect",
-  path: "/redirect",
   getParentRoute: () => rootRouteImport,
 } as any);
 const IndexRoute = IndexRouteImport.update({
@@ -54,34 +48,30 @@ const ApiMoviesPopularPageServerRoute =
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
-  "/redirect": typeof RedirectRoute;
   "/search": typeof SearchRoute;
   "/movie/$id": typeof MovieIdRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
-  "/redirect": typeof RedirectRoute;
   "/search": typeof SearchRoute;
   "/movie/$id": typeof MovieIdRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
-  "/redirect": typeof RedirectRoute;
   "/search": typeof SearchRoute;
   "/movie/$id": typeof MovieIdRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/redirect" | "/search" | "/movie/$id";
+  fullPaths: "/" | "/search" | "/movie/$id";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/redirect" | "/search" | "/movie/$id";
-  id: "__root__" | "/" | "/redirect" | "/search" | "/movie/$id";
+  to: "/" | "/search" | "/movie/$id";
+  id: "__root__" | "/" | "/search" | "/movie/$id";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
-  RedirectRoute: typeof RedirectRoute;
   SearchRoute: typeof SearchRoute;
   MovieIdRoute: typeof MovieIdRoute;
 }
@@ -118,13 +108,6 @@ declare module "@tanstack/react-router" {
       path: "/search";
       fullPath: "/search";
       preLoaderRoute: typeof SearchRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/redirect": {
-      id: "/redirect";
-      path: "/redirect";
-      fullPath: "/redirect";
-      preLoaderRoute: typeof RedirectRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/": {
@@ -164,7 +147,6 @@ declare module "@tanstack/react-start/server" {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  RedirectRoute: RedirectRoute,
   SearchRoute: SearchRoute,
   MovieIdRoute: MovieIdRoute,
 };
