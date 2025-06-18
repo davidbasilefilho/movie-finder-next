@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/pagination";
 import { Switch } from "@/components/ui/switch";
 import { useAppForm } from "@/components/ui/tanstack-form";
-import { createSearchQueryOptions } from "@/lib/query/options";
+import { createSearchQueryOptions } from "@/lib/options";
 import { searchSchema, SearchSchema } from "@/lib/schema/req";
 import { Movie } from "@/lib/schema/res";
 import {
@@ -29,6 +29,7 @@ import {
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
+import { type } from "arktype";
 import { ArrowLeft, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useCallback, useEffect } from "react";
 
@@ -71,12 +72,11 @@ export const Route = createFileRoute("/search")({
       </div>
     );
   },
-  validateSearch: (search) => searchSchema(search),
+  validateSearch: searchSchema,
   loaderDeps: ({ search }) => ({ search }),
   loader: async ({ context: { queryClient }, deps: { search } }) => {
-    // If searchSchema validation failed, search will be an error object
-    // In that case, we should let the error boundary handle it
     if (
+      search instanceof type.errors ||
       !search ||
       typeof search !== "object" ||
       "byPath" in search ||
@@ -92,7 +92,6 @@ function SearchComponent() {
   const search = Route.useSearch();
   const navigate = useNavigate();
 
-  // Type guard to ensure we have a valid search object
   const isValidSearch = (search: any): search is SearchSchema => {
     return (
       search &&
@@ -108,7 +107,7 @@ function SearchComponent() {
 
   const { data } = useSuspenseQuery(createSearchQueryOptions(search));
   const form = useAppForm({
-    validators: { onChange: ({ value }) => searchSchema(value) },
+    validators: { onChange: searchSchema },
     onSubmit: ({ value }) =>
       navigate({
         to: "/search",
@@ -147,14 +146,14 @@ function SearchComponent() {
 
   return (
     <div className="px-6 py-4 container mx-auto">
-      <h2 className="text-xl md:text-2xl leading-7 font-bold inline-block *:inline-block w-full">
-        <Link to="/" className="mr-2 *:inline-block ">
-          <ArrowLeft className="w-6 h-6" />
+      <h2 className="text-xl md:text-2xl leading-6 font-bold inline-block *:inline-block w-full border-0 my-2">
+        <Link to="/" className="mr-2 *:inline-block">
+          <ArrowLeft className="w-6 h-6 align-top" />
         </Link>
         Search results for "{decodeURI(search.query ?? "")}"
       </h2>
 
-      <form.AppForm {...form}>
+      <form.AppForm>
         <form
           onSubmit={handleSubmit}
           className="flex flex-wrap *:shrink *:grow gap-2 md:gap-4 mt-4 mb-8 items-end mx-auto bg-card border rounded p-6"
@@ -191,9 +190,7 @@ function SearchComponent() {
                     placeholder="2020, 1971, etc."
                     type="number"
                     value={field.state.value ?? ""}
-                    onChange={(e) =>
-                      field.handleChange(e.target.value || undefined)
-                    }
+                    onChange={(e) => field.handleChange(e.target.value ?? "")}
                     onBlur={field.handleBlur}
                   />
                 </field.FormControl>
@@ -214,9 +211,7 @@ function SearchComponent() {
                     placeholder="2021, 1972, etc."
                     type="number"
                     value={field.state.value ?? ""}
-                    onChange={(e) =>
-                      field.handleChange(e.target.value || undefined)
-                    }
+                    onChange={(e) => field.handleChange(e.target.value ?? "")}
                     onBlur={field.handleBlur}
                   />
                 </field.FormControl>
@@ -277,19 +272,7 @@ function SearchComponent() {
                 className: "gap-1 pl-2.5",
               })}
               aria-label="Go to previous page"
-              search={(prev) => {
-                const safeSearchParams = createSafeSearchParams(prev);
-                return {
-                  ...safeSearchParams,
-                  primary_release_year:
-                    safeSearchParams.primary_release_year ?? undefined,
-                  region: safeSearchParams.region ?? undefined,
-                  year: safeSearchParams.year ?? undefined,
-                  query: safeSearchParams.query ?? "",
-                  include_adult: safeSearchParams.include_adult ?? false,
-                  page: Math.max(1, (safeSearchParams.page ?? 1) - 1),
-                };
-              }}
+              search={(prev) => createSafeSearchParams(prev)}
             >
               <ChevronLeft className="h-4 w-4" />
               <span>Previous</span>
@@ -305,19 +288,7 @@ function SearchComponent() {
                     variant: "outline",
                     size: "icon",
                   })}
-                  search={(prev) => {
-                    const safeSearchParams = createSafeSearchParams(prev);
-                    return {
-                      ...safeSearchParams,
-                      primary_release_year:
-                        safeSearchParams.primary_release_year ?? undefined,
-                      region: safeSearchParams.region ?? undefined,
-                      year: safeSearchParams.year ?? undefined,
-                      query: safeSearchParams.query ?? "",
-                      include_adult: safeSearchParams.include_adult ?? false,
-                      page: 1,
-                    };
-                  }}
+                  search={(prev) => createSafeSearchParams(prev)}
                 >
                   1
                 </Link>
@@ -339,19 +310,7 @@ function SearchComponent() {
                   variant: currentPage === i ? "default" : "outline",
                   size: "icon",
                 })}
-                search={(prev) => {
-                  const safeSearchParams = createSafeSearchParams(prev);
-                  return {
-                    ...safeSearchParams,
-                    primary_release_year:
-                      safeSearchParams.primary_release_year ?? undefined,
-                    region: safeSearchParams.region ?? undefined,
-                    year: safeSearchParams.year ?? undefined,
-                    query: safeSearchParams.query ?? "",
-                    include_adult: safeSearchParams.include_adult ?? false,
-                    page: i,
-                  };
-                }}
+                search={(prev) => createSafeSearchParams(prev)}
               >
                 {i}
               </Link>
@@ -370,19 +329,7 @@ function SearchComponent() {
                     variant: "outline",
                     size: "icon",
                   })}
-                  search={(prev) => {
-                    const safeSearchParams = createSafeSearchParams(prev);
-                    return {
-                      ...safeSearchParams,
-                      primary_release_year:
-                        safeSearchParams.primary_release_year ?? undefined,
-                      region: safeSearchParams.region ?? undefined,
-                      year: safeSearchParams.year ?? undefined,
-                      query: safeSearchParams.query ?? "",
-                      include_adult: safeSearchParams.include_adult ?? false,
-                      page: totalPages,
-                    };
-                  }}
+                  search={(prev) => createSafeSearchParams(prev)}
                 >
                   {totalPages}
                 </Link>
@@ -393,22 +340,7 @@ function SearchComponent() {
           <PaginationItem>
             <Link
               to="/search"
-              search={(prev) => {
-                const safeSearchParams = createSafeSearchParams(prev);
-                return {
-                  ...safeSearchParams,
-                  primary_release_year:
-                    safeSearchParams.primary_release_year ?? undefined,
-                  region: safeSearchParams.region ?? undefined,
-                  year: safeSearchParams.year ?? undefined,
-                  query: safeSearchParams.query ?? "",
-                  include_adult: safeSearchParams.include_adult ?? false,
-                  page: Math.min(
-                    data?.total_pages ?? 1,
-                    (safeSearchParams.page || 1) + 1,
-                  ),
-                };
-              }}
+              search={(prev) => createSafeSearchParams(prev)}
               aria-label="Go to next page"
               className={buttonVariants({
                 variant: "outline",

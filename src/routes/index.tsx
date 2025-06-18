@@ -8,7 +8,7 @@ import { useAppForm } from "@/components/ui/tanstack-form";
 import {
   popularMoviesQueryOptions,
   trendingMoviesQueryOptions,
-} from "@/lib/query/options";
+} from "@/lib/options";
 import { searchSchema } from "@/lib/schema/req";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -34,19 +34,10 @@ function Home() {
   const form = useAppForm({
     validators: { onChange: searchSchema },
     onSubmit: ({ value }) => {
-      const { query, include_adult, primary_release_year, page, region, year } =
-        value;
       console.log("Form submitted with values:", value);
       navigate({
         to: "/search",
-        search: {
-          query,
-          include_adult,
-          primary_release_year,
-          page,
-          region,
-          year,
-        },
+        search: value,
       });
     },
 
@@ -102,9 +93,9 @@ function Home() {
                           onBlur={field.handleBlur}
                         />
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                        <field.FormMessage />
                       </div>
                     </field.FormControl>
+                    <field.FormMessage />
                   </field.FormItem>
                 )}
               />

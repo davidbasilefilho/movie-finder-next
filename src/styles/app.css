@@ -190,6 +190,10 @@
   .muted {
     @apply text-muted-foreground text-sm;
   }
+
+  .capitalize-first {
+    @apply first-letter:capitalize;
+  }
 }
 
 .trending {

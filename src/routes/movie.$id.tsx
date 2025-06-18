@@ -1,7 +1,7 @@
 import { Loading } from "@/components/loading";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { createMovieQueryOptions } from "@/lib/query/options";
+import { createMovieQueryOptions } from "@/lib/options";
 import { getLanguageName } from "@/lib/utils";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
@@ -9,8 +9,8 @@ import {
   useCanGoBack,
   useRouter,
 } from "@tanstack/react-router";
+import { type } from "arktype";
 import { formatDate, parse as parseDate } from "date-fns";
-import { motion } from "framer-motion";
 import {
   ArrowLeft,
   Building2,
@@ -20,6 +20,7 @@ import {
   Star,
   TrendingUp,
 } from "lucide-react";
+import { motion } from "motion/react";
 
 function formatCurrency(amount: number): string {
   return new Intl.NumberFormat("en-US", {
@@ -35,7 +36,11 @@ const formatReleaseDate = (date: string | undefined) => {
     : "N/A";
 };
 
+const inputSchema = type({ id: "number.integer >= 0" });
+
 export const Route = createFileRoute("/movie/$id")({
+  parseParams: (params) => inputSchema.assert({ id: Number(params.id) }),
+  stringifyParams: (params) => ({ id: `${params.id}` }),
   component: Movie,
   pendingComponent: () => <Loading />,
   loader: async ({ context: { queryClient }, params }) => {

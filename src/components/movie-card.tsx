@@ -4,10 +4,11 @@ import { StarFilledIcon } from "@radix-ui/react-icons";
 import { Link } from "@tanstack/react-router";
 import { formatDate, parse as parseDate } from "date-fns";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
   const [isHovered, setIsHovered] = useState(false);
+  const maxOverviewLength = 150; // Set a maximum length for the overview text
 
   return (
     <div
@@ -16,18 +17,21 @@ export default function MovieCard({ movie }: { movie: Movie }) {
     >
       <Link
         to="/movie/$id"
-        params={{ id: movie!.id!.toFixed(0) }}
-        className="aspect-[2/3] mb-4 overflow-hidden"
+        params={{ id: movie!.id! }}
+        className="aspect-[2/3] *:aspect-[2/3] w-full mb-4 overflow-hidden **:overflow-hidden"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className="relative">
           <AnimatePresence>
             <motion.div
-              className="w-full h-full"
+              key={`${movie.id}-poster`}
+              className="w-full h-full overflow-hidden"
               initial={{ scale: 1 }}
-              animate={{ scale: isHovered ? 1.05 : 1 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              animate={{
+                scale: isHovered ? 1.05 : 1,
+                transition: { duration: 0.3, ease: "easeInOut" },
+              }}
             >
               <img
                 src={
@@ -42,6 +46,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
 
             {isHovered && (
               <motion.div
+                key={`${movie.id}-overlay`}
                 className="absolute inset-0 bg-black/80 hover:backdrop-blur-sm p-6 text-foreground flex flex-col" // Increased padding from p-4 to p-6
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -57,12 +62,14 @@ export default function MovieCard({ movie }: { movie: Movie }) {
                   {movie!.title}
                 </motion.p>
                 <motion.p
-                  className="text-sm font-normal leading-relaxed mt-2 flex-grow overflow-hidden" // Removed line-clamp-4
+                  className="text-sm font-normal leading-relaxed mt-2 h-3/5 overflow-y-auto pr-1" // Added overflow-y-auto and pr-1 for scrollbar
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4, duration: 0.3, ease: "circInOut" }}
                 >
-                  {movie!.overview}
+                  {movie!.overview!.length > maxOverviewLength
+                    ? movie!.overview!.slice(0, maxOverviewLength) + "..."
+                    : movie!.overview}
                 </motion.p>
                 <motion.p
                   className="text-base font-medium mt-auto"
