@@ -1,3 +1,7 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Clapperboard, Search } from "lucide-react";
+import { useCallback, useRef } from "react";
 import { Footer } from "@/components/footer";
 import { Loading } from "@/components/loading";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
@@ -10,10 +14,6 @@ import {
 	trendingMoviesQueryOptions,
 } from "@/lib/options";
 import { searchSchema } from "@/lib/schema/req";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Clapperboard, Search } from "lucide-react";
-import { useCallback, useRef } from "react";
 
 export const Route = createFileRoute("/")({
 	component: Home,

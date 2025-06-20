@@ -19,6 +19,9 @@
 			"correctness": {
 				"noChildrenProp": "off"
 			},
+			"nursery": {
+				"noReactPropAssign": "error"
+			},
 			"style": {
 				"noNonNullAssertion": "off"
 			}

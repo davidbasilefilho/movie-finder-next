@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* biome-ignore-all lint: This file is auto-generated */
 
 // @ts-nocheck
 
@@ -8,88 +8,88 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as SearchRouteImport } from './routes/search'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as MovieIdRouteImport } from './routes/movie.$id'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as MovieIdRouteImport } from "./routes/movie.$id";
+import { Route as SearchRouteImport } from "./routes/search";
 
 const SearchRoute = SearchRouteImport.update({
-  id: '/search',
-  path: '/search',
-  getParentRoute: () => rootRouteImport,
-} as any)
+	id: "/search",
+	path: "/search",
+	getParentRoute: () => rootRouteImport,
+} as any);
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
+	id: "/",
+	path: "/",
+	getParentRoute: () => rootRouteImport,
+} as any);
 const MovieIdRoute = MovieIdRouteImport.update({
-  id: '/movie/$id',
-  path: '/movie/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
+	id: "/movie/$id",
+	path: "/movie/$id",
+	getParentRoute: () => rootRouteImport,
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/search': typeof SearchRoute
-  '/movie/$id': typeof MovieIdRoute
+	"/": typeof IndexRoute;
+	"/search": typeof SearchRoute;
+	"/movie/$id": typeof MovieIdRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/search': typeof SearchRoute
-  '/movie/$id': typeof MovieIdRoute
+	"/": typeof IndexRoute;
+	"/search": typeof SearchRoute;
+	"/movie/$id": typeof MovieIdRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/search': typeof SearchRoute
-  '/movie/$id': typeof MovieIdRoute
+	__root__: typeof rootRouteImport;
+	"/": typeof IndexRoute;
+	"/search": typeof SearchRoute;
+	"/movie/$id": typeof MovieIdRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/search' | '/movie/$id'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/search' | '/movie/$id'
-  id: '__root__' | '/' | '/search' | '/movie/$id'
-  fileRoutesById: FileRoutesById
+	fileRoutesByFullPath: FileRoutesByFullPath;
+	fullPaths: "/" | "/search" | "/movie/$id";
+	fileRoutesByTo: FileRoutesByTo;
+	to: "/" | "/search" | "/movie/$id";
+	id: "__root__" | "/" | "/search" | "/movie/$id";
+	fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  SearchRoute: typeof SearchRoute
-  MovieIdRoute: typeof MovieIdRoute
+	IndexRoute: typeof IndexRoute;
+	SearchRoute: typeof SearchRoute;
+	MovieIdRoute: typeof MovieIdRoute;
 }
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/movie/$id': {
-      id: '/movie/$id'
-      path: '/movie/$id'
-      fullPath: '/movie/$id'
-      preLoaderRoute: typeof MovieIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-  }
+declare module "@tanstack/react-router" {
+	interface FileRoutesByPath {
+		"/search": {
+			id: "/search";
+			path: "/search";
+			fullPath: "/search";
+			preLoaderRoute: typeof SearchRouteImport;
+			parentRoute: typeof rootRouteImport;
+		};
+		"/": {
+			id: "/";
+			path: "/";
+			fullPath: "/";
+			preLoaderRoute: typeof IndexRouteImport;
+			parentRoute: typeof rootRouteImport;
+		};
+		"/movie/$id": {
+			id: "/movie/$id";
+			path: "/movie/$id";
+			fullPath: "/movie/$id";
+			preLoaderRoute: typeof MovieIdRouteImport;
+			parentRoute: typeof rootRouteImport;
+		};
+	}
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  SearchRoute: SearchRoute,
-  MovieIdRoute: MovieIdRoute,
-}
+	IndexRoute: IndexRoute,
+	SearchRoute: SearchRoute,
+	MovieIdRoute: MovieIdRoute,
+};
 export const routeTree = rootRouteImport
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+	._addFileChildren(rootRouteChildren)
+	._addFileTypes<FileRouteTypes>();
