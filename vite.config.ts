@@ -8,6 +8,6 @@ export default defineConfig({
 	},
 	plugins: [
 		tsConfigPaths({ projects: ["./tsconfig.json"] }),
-		tanstackStart({ target: "vercel" }),
+		tanstackStart({ target: "cloudflare-pages" }),
 	],
 });
