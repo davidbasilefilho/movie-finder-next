@@ -17,7 +17,7 @@ This tech stack is focused on performance and developer experience (full stack t
 - **Framework:** Tanstack Start, Vite, React, TypeScript, Bun
 - **Routing:** TanStack React Router
 - **Data Fetching:** React Query (@tanstack/react-query)
-- **Styling:** Tailwind CSS, Radix UI components, clsx
+- **Styling:** Tailwind CSS, shadcn/ui
 - **Animations:** Motion
 - **Other libraries:** Biome for linting and formatting, husky for git hooks, ArkType for schema validation
 
