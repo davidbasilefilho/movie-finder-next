@@ -142,7 +142,7 @@
 		@apply border-border outline-ring/50;
 	}
 	body {
-		@apply bg-radial-[at_50%_85%] from-background via-accent to-background min-h-dvh text-foreground font-sans antialiased;
+		@apply bg-background min-h-dvh text-foreground font-sans antialiased;
 		letter-spacing: var(--tracking-normal);
 	}
 	h1 {
