@@ -246,3 +246,15 @@
 	font-family: "Bebas Neue", sans-serif;
 	@apply text-transparent text-8xl md:text-8xl lg:text-9xl;
 }
+
+@keyframes animated-gradient-scroll {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

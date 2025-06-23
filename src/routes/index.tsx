@@ -1,7 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Clapperboard, Search } from "lucide-react";
-import { useCallback, useRef } from "react";
+import { AnimatedGradientIcon } from "@/components/animated-gradient-icon";
 import { Footer } from "@/components/footer";
 import { Loading } from "@/components/loading";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
@@ -14,6 +11,10 @@ import {
 	trendingMoviesQueryOptions,
 } from "@/lib/options";
 import { searchSchema } from "@/lib/schema/req";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Clapperboard, Search } from "lucide-react";
+import { useCallback, useRef } from "react";
 
 export const Route = createFileRoute("/")({
 	component: Home,
@@ -67,7 +68,13 @@ function Home() {
 					<h1 className="text-center inline-block text-4xl md:text-5xl">
 						Find{" "}
 						<div className="inline-block">
-							<Clapperboard className="md:w-9 md:h-9 w-8 h-8 leading-10 align-middle md:align-baseline inline-block mr-0.5 stroke-foreground" />
+							<AnimatedGradientIcon
+								colors={["var(--primary)", "var(--destructive)"]}
+								className="md:w-9 md:h-9 w-7 h-7 leading-10 align-baseline inline-block ml-1.5 mr-1"
+								duration="4s"
+								strokeWidth={2.5}
+								icon={Clapperboard}
+							/>
 							<AnimatedGradientText
 								colorFrom="var(--primary)"
 								colorTo="var(--destructive)"
