@@ -64,17 +64,18 @@ function Home() {
 		<main>
 			<div className="p-8 md:p-12 lg:p-16 pb-6 md:pb-10 lg:pb-14">
 				<div className="flex w-full items-center justify-center flex-col gap-8">
-					<h1 className="text-center inline-block">
+					<h1 className="text-center inline-block text-4xl md:text-5xl">
 						Find{" "}
 						<div className="inline-block">
-							<Clapperboard className="md:w-10 md:h-10 w-8 h-8 leading-12 md:leading-14 lg:leading-14 align-top inline-block mr-0.5 stroke-foreground" />
+							<Clapperboard className="md:w-10 md:h-10 w-8 h-8 leading-12 align-baseline inline-block mr-0.5 stroke-foreground" />
 							<AnimatedGradientText
 								colorFrom="var(--primary)"
 								colorTo="var(--destructive)"
 							>
 								Movies
 							</AnimatedGradientText>
-						</div>{" "}
+						</div>
+						<br />
 						without a hassle
 					</h1>
 					<form.AppForm>
