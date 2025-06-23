@@ -67,7 +67,7 @@ function Home() {
 					<h1 className="text-center inline-block text-4xl md:text-5xl">
 						Find{" "}
 						<div className="inline-block">
-							<Clapperboard className="md:w-10 md:h-10 w-8 h-8 leading-12 align-baseline inline-block mr-0.5 stroke-foreground" />
+							<Clapperboard className="md:w-9 md:h-9 w-8 h-8 leading-10 align-middle md:align-baseline inline-block mr-0.5 stroke-foreground" />
 							<AnimatedGradientText
 								colorFrom="var(--primary)"
 								colorTo="var(--destructive)"
